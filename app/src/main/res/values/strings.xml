@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">My Todo</string>
+    <string name="welcome_to">Welcome to</string>
+    <string name="welcome_screen_content">My Todo helps you organized and perform your tasks much faster</string>
+    <string name="try_demo">Try Demo</string>
+    <string name="login">Login</string>
+    <string name="user_name">User Name</string>
+</resources>
