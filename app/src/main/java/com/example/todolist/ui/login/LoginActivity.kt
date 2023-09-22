@@ -1,15 +1,31 @@
 package com.example.todolist.ui.login
 
 import android.os.Bundle
+import android.util.Log
+
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.border
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -20,19 +36,27 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.layoutId
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
 import com.example.todolist.R
+import com.example.todolist.modal.LoginRequestData
 import com.example.todolist.ui.theme.Blue
+import com.example.todolist.ui.theme.LightBlue
 import com.example.todolist.ui.theme.TodoListTheme
+import com.google.gson.Gson
 
 class LoginActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,64 +71,234 @@ class LoginActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun Login() {
+
         var loginUserName by remember { mutableStateOf("") }
+        var loginUserPassword by remember { mutableStateOf("") }
+
+        var loginUserNameError by remember { mutableStateOf("") }
+        var loginUserPasswordError by remember { mutableStateOf("") }
+
+        val isPasswordToggled by remember { mutableStateOf(false) }
+
+        var isPasswordError by remember { mutableStateOf(false) }
+        var isUserNameError by remember { mutableStateOf(false) }
+
+
+        fun validate(): Boolean {
+            if (loginUserName.isEmpty()) {
+                isUserNameError = true
+                loginUserNameError = "Enter User name"
+                return false
+            } else {
+                isUserNameError = false
+                loginUserNameError = ""
+            }
+            if (loginUserPassword.isEmpty()) {
+                isPasswordError = true
+                loginUserPasswordError = "Enter Password"
+                return false
+            } else {
+                isPasswordError = false
+                loginUserPasswordError = ""
+            }
+            return true
+        }
+
 
         Surface(
             modifier = Modifier.fillMaxSize(),
             color = Color.White
         ) {
-            ConstraintLayout(
-                modifier = Modifier
-                    .padding(15.dp)
-                    .fillMaxWidth(), constraintSet = setUserLoginConstraints()
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier.fillMaxSize()
             ) {
-                Text(
-                    text = stringResource(R.string.login),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .layoutId("loginTitle"),
-                    style = MaterialTheme.typography.titleLarge,
-                    color = Blue
-                )
-                Box(
-                    modifier = Modifier
-                        .layoutId("loginSubTitle")
-                        .padding(top = 15.dp)
-                ) {
-                    Text(
-                        text = stringResource(R.string.welcome_back),
-                        style = MaterialTheme.typography.titleMedium,
-                        color = Color.Gray,
-                    )
-                }
-                Box(
-                    Modifier
-                        .padding(top = 15.dp)
-                        .layoutId("loginUserName")
-                ) {
-                    OutlinedTextField(
-                        value = loginUserName,
-                        onValueChange = {
-                            loginUserName = it
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        shape = RoundedCornerShape(20),
-                        textStyle = MaterialTheme.typography.bodyMedium,
-                        placeholder = {
-                            Text(
-                                text = stringResource(R.string.user_name),
-                                style = MaterialTheme.typography.bodyMedium
+                Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+                    Row(
+                        horizontalArrangement = Arrangement.Center,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        BoxWithConstraints(
+                            modifier = Modifier
+                                .padding(top = 15.dp)
+                                .height(50.dp)
+                                .width(50.dp)
+                                .fillMaxWidth()
+                                .background(
+                                    color = Blue,
+                                    shape = RoundedCornerShape(15)
+                                ),
+                        ) {
+                            Image(
+                                painter = painterResource(id = R.drawable.baseline_done),
+                                contentDescription = stringResource(
+                                    id = R.string.app_name
+                                ), modifier = Modifier
+                                    .fillMaxWidth()
+                                    .fillMaxHeight()
+                                    .padding(15.dp)
                             )
-                        },
-                        keyboardOptions = KeyboardOptions(
-                            keyboardType = KeyboardType.Text,
-                            imeAction = ImeAction.Next
-                        ),
-                    )
+                        }
+                    }
+                    BoxWithConstraints(modifier = Modifier.padding(top = 10.dp)) {
+                        Text(
+                            text = stringResource(R.string.app_name),
+                            modifier = Modifier.fillMaxWidth(),
+                            style = MaterialTheme.typography.bodyLarge,
+                            textAlign = TextAlign.Center,
+                        )
+                    }
+                    Card(
+                        modifier = Modifier.padding(15.dp),
+                        colors = CardDefaults.cardColors(containerColor = Color.White),
+                        elevation = CardDefaults.cardElevation(
+                            hoveredElevation = 10.dp,
+                            defaultElevation = 8.dp
+                        )
+                    ) {
+                        ConstraintLayout(
+                            modifier = Modifier
+                                .padding(15.dp)
+                                .fillMaxWidth(),
+
+                            constraintSet = setUserLoginConstraints()
+                        ) {
+                            Text(
+                                text = stringResource(R.string.login),
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .layoutId("loginTitle"),
+                                style = MaterialTheme.typography.titleLarge,
+                                color = Blue
+                            )
+                            Box(
+                                modifier = Modifier
+                                    .layoutId("loginSubTitle")
+                                    .padding(top = 15.dp)
+                            ) {
+                                Text(
+                                    text = stringResource(R.string.welcome_back),
+                                    style = MaterialTheme.typography.titleMedium,
+                                    color = Color.Gray,
+                                )
+                            }
+                            Box(
+                                Modifier
+                                    .padding(top = 15.dp)
+                                    .layoutId("loginUserName")
+                            ) {
+                                OutlinedTextField(
+                                    value = loginUserName,
+                                    onValueChange = {
+                                        loginUserName = it
+                                    },
+                                    modifier = Modifier
+                                        .fillMaxWidth(),
+                                    shape = RoundedCornerShape(20),
+                                    textStyle = MaterialTheme.typography.bodyMedium,
+                                    placeholder = {
+                                        Text(
+                                            text = stringResource(R.string.user_name),
+                                            style = MaterialTheme.typography.bodyMedium
+                                        )
+                                    },
+                                    keyboardOptions = KeyboardOptions(
+                                        keyboardType = KeyboardType.Text,
+                                        imeAction = ImeAction.Next
+                                    ), isError = isUserNameError, supportingText = {
+                                        if (isUserNameError) Text(
+                                            text = loginUserNameError,
+                                            style = MaterialTheme.typography.bodyMedium
+                                        ) else null
+                                    }
+                                )
+
+
+                            }
+                            Box(
+                                Modifier
+                                    .padding(top = 15.dp)
+                                    .layoutId("loginPassword")
+                            ) {
+                                OutlinedTextField(
+                                    visualTransformation = if (isPasswordToggled) VisualTransformation.None else PasswordVisualTransformation(),
+                                    value = loginUserPassword,
+                                    onValueChange = {
+                                        loginUserPassword = it
+                                    },
+                                    modifier = Modifier
+                                        .fillMaxWidth(),
+                                    shape = RoundedCornerShape(20),
+                                    textStyle = MaterialTheme.typography.bodyMedium,
+                                    placeholder = {
+                                        Text(
+                                            text = stringResource(R.string.password),
+                                            style = MaterialTheme.typography.bodyMedium
+                                        )
+                                    },
+                                    keyboardOptions = KeyboardOptions(
+                                        keyboardType = KeyboardType.Password,
+                                        imeAction = ImeAction.Done
+                                    ), isError = isPasswordError, supportingText = {
+                                        if (isPasswordError) Text(
+                                            text = loginUserPasswordError,
+                                            style = MaterialTheme.typography.bodyMedium
+                                        ) else null
+                                    }
+                                )
+
+
+                            }
+
+
+                            Row(
+                                horizontalArrangement = Arrangement.Center,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .layoutId("loginButton")
+                                    .padding(top = 15.dp)
+                            ) {
+                                Button(
+                                    onClick = {
+                                        if (validate()) {
+                                            Log.d(
+                                                "login",
+                                                Gson().toJson(
+                                                    LoginRequestData(
+                                                        loginUserName,
+                                                        loginUserPassword
+                                                    )
+                                                )
+                                            )
+                                        }
+                                    },
+                                    shape = RoundedCornerShape(35),
+                                    modifier = Modifier
+                                        .height(55.dp)
+                                        .fillMaxWidth()
+                                        .padding(start = 15.dp, end = 15.dp),
+                                    colors = ButtonDefaults.buttonColors(
+                                        containerColor = LightBlue
+
+                                    )
+                                ) {
+                                    Text(
+                                        text = stringResource(R.string.login),
+                                        color = Blue,
+                                        style = MaterialTheme.typography.labelLarge,
+                                        modifier = Modifier.padding(5.dp)
+                                    )
+                                }
+                            }
+                        }
+
+                    }
                 }
 
+
             }
+
+
         }
     }
 
@@ -115,6 +309,7 @@ class LoginActivity : ComponentActivity() {
             val loginSubTitleConstraint = createRefFor("loginSubTitle")
             val loginUserNameConstraint = createRefFor("loginUserName")
             val loginPasswordConstraint = createRefFor("loginPassword")
+            val loginButtonConstraint = createRefFor("loginButton")
             constrain(loginTitleConstraint) {
                 top.linkTo(parent.top)
                 start.linkTo(parent.start)
@@ -131,6 +326,12 @@ class LoginActivity : ComponentActivity() {
 
             constrain(loginPasswordConstraint) {
                 top.linkTo(loginUserNameConstraint.bottom)
+                start.linkTo(parent.start)
+                end.linkTo(parent.end)
+            }
+
+            constrain(loginButtonConstraint) {
+                top.linkTo(loginPasswordConstraint.bottom)
                 start.linkTo(parent.start)
                 end.linkTo(parent.end)
             }
