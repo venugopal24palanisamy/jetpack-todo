@@ -25,8 +25,9 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Kotlin Object" />
-        <option value="Kotlin Class" />
         <option value="Kotlin Interface" />
+        <option value="Kotlin Data Class" />
+        <option value="Kotlin Class" />
       </list>
     </option>
   </component>
@@ -44,18 +45,21 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.cidr.known.project.marker": "true",
-    "cidr.known.project.marker": "true",
-    "last_opened_file_path": "C:/AndroidProjects/Dagger-Hilt-Tutorial-master",
-    "memory.settings.postsync.last.time.stamp": "1695287088365",
-    "settings.editor.selected.configurable": "memory.settings"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/AndroidProjects/Dagger-Hilt-Tutorial-master&quot;,
+    &quot;memory.settings.postsync.last.time.stamp&quot;: &quot;1695287088365&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;memory.settings&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
+    <key name="android.template.595602659">
+      <recent name="com.example.todolist.ui.home" />
+    </key>
     <key name="MoveKotlinTopLevelDeclarationsDialog.RECENTS_KEY">
       <recent name="com.example.todolist.data.api" />
     </key>

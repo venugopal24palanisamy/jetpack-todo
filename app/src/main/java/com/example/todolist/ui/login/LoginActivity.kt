@@ -1,10 +1,12 @@
 package com.example.todolist.ui.login
 
 import android.os.Bundle
-import android.util.Log
+import android.widget.Toast
+
 
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -32,14 +34,11 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.layoutId
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -48,16 +47,23 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
+import androidx.hilt.navigation.compose.hiltViewModel
+
 import com.example.todolist.R
 import com.example.todolist.modal.LoginRequestData
+import com.example.todolist.ui.components.CircularLoader
 import com.example.todolist.ui.theme.Blue
 import com.example.todolist.ui.theme.LightBlue
 import com.example.todolist.ui.theme.TodoListTheme
-import com.google.gson.Gson
 
+import com.example.todolist.utilz.Status
+import dagger.hilt.android.AndroidEntryPoint
+
+@AndroidEntryPoint
 class LoginActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,40 +76,53 @@ class LoginActivity : ComponentActivity() {
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    fun Login() {
+    fun Login(viewModel: LoginViewModel = hiltViewModel()) {
+        val context = LocalContext.current
+        viewModel.loginData.observe(
+            this
+        ) {
+            when (it.status) {
+                Status.LOADING -> viewModel.isLoading = true
 
-        var loginUserName by remember { mutableStateOf("") }
-        var loginUserPassword by remember { mutableStateOf("") }
+                Status.SUCCESS -> {
+                    Toast.makeText(
+                        context,
+                        it.data?.firstName ?: getString(R.string.n_a),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    viewModel.isLoading = false
+                }
 
-        var loginUserNameError by remember { mutableStateOf("") }
-        var loginUserPasswordError by remember { mutableStateOf("") }
-
-        val isPasswordToggled by remember { mutableStateOf(false) }
-
-        var isPasswordError by remember { mutableStateOf(false) }
-        var isUserNameError by remember { mutableStateOf(false) }
-
+                Status.ERROR -> {
+                    Toast.makeText(
+                        context,
+                        it.message,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    viewModel.isLoading = false
+                }
+            }
+        }
 
         fun validate(): Boolean {
-            if (loginUserName.isEmpty()) {
-                isUserNameError = true
-                loginUserNameError = "Enter User name"
+            if (viewModel.loginUserName.isEmpty()) {
+                viewModel.isUserNameError = true
+                viewModel.loginUserNameError = getString(R.string.enter_user_name)
                 return false
             } else {
-                isUserNameError = false
-                loginUserNameError = ""
+                viewModel.isUserNameError = false
+                viewModel.loginUserNameError = ""
             }
-            if (loginUserPassword.isEmpty()) {
-                isPasswordError = true
-                loginUserPasswordError = "Enter Password"
+            if (viewModel.loginUserPassword.isEmpty()) {
+                viewModel.isPasswordError = true
+                viewModel.loginUserPasswordError = getString(R.string.enter_password)
                 return false
             } else {
-                isPasswordError = false
-                loginUserPasswordError = ""
+                viewModel.isPasswordError = false
+                viewModel.loginUserPasswordError = ""
             }
             return true
         }
-
 
         Surface(
             modifier = Modifier.fillMaxSize(),
@@ -188,9 +207,9 @@ class LoginActivity : ComponentActivity() {
                                     .layoutId("loginUserName")
                             ) {
                                 OutlinedTextField(
-                                    value = loginUserName,
+                                    value = viewModel.loginUserName,
                                     onValueChange = {
-                                        loginUserName = it
+                                        viewModel.loginUserName = it
                                     },
                                     modifier = Modifier
                                         .fillMaxWidth(),
@@ -205,11 +224,11 @@ class LoginActivity : ComponentActivity() {
                                     keyboardOptions = KeyboardOptions(
                                         keyboardType = KeyboardType.Text,
                                         imeAction = ImeAction.Next
-                                    ), isError = isUserNameError, supportingText = {
-                                        if (isUserNameError) Text(
-                                            text = loginUserNameError,
+                                    ), isError = viewModel.isUserNameError, supportingText = {
+                                        if (viewModel.isUserNameError) Text(
+                                            text = viewModel.loginUserNameError,
                                             style = MaterialTheme.typography.bodyMedium
-                                        ) else null
+                                        )
                                     }
                                 )
 
@@ -221,10 +240,10 @@ class LoginActivity : ComponentActivity() {
                                     .layoutId("loginPassword")
                             ) {
                                 OutlinedTextField(
-                                    visualTransformation = if (isPasswordToggled) VisualTransformation.None else PasswordVisualTransformation(),
-                                    value = loginUserPassword,
+                                    visualTransformation = if (viewModel.isPasswordToggled) VisualTransformation.None else PasswordVisualTransformation(),
+                                    value = viewModel.loginUserPassword,
                                     onValueChange = {
-                                        loginUserPassword = it
+                                        viewModel.loginUserPassword = it
                                     },
                                     modifier = Modifier
                                         .fillMaxWidth(),
@@ -239,11 +258,11 @@ class LoginActivity : ComponentActivity() {
                                     keyboardOptions = KeyboardOptions(
                                         keyboardType = KeyboardType.Password,
                                         imeAction = ImeAction.Done
-                                    ), isError = isPasswordError, supportingText = {
-                                        if (isPasswordError) Text(
-                                            text = loginUserPasswordError,
+                                    ), isError = viewModel.isPasswordError, supportingText = {
+                                        if (viewModel.isPasswordError) Text(
+                                            text = viewModel.loginUserPasswordError,
                                             style = MaterialTheme.typography.bodyMedium
-                                        ) else null
+                                        )
                                     }
                                 )
 
@@ -261,13 +280,11 @@ class LoginActivity : ComponentActivity() {
                                 Button(
                                     onClick = {
                                         if (validate()) {
-                                            Log.d(
-                                                "login",
-                                                Gson().toJson(
-                                                    LoginRequestData(
-                                                        loginUserName,
-                                                        loginUserPassword
-                                                    )
+                                            viewModel.loginCall(
+                                                context,
+                                                LoginRequestData(
+                                                    viewModel.loginUserName,
+                                                    viewModel.loginUserPassword
                                                 )
                                             )
                                         }
@@ -279,7 +296,6 @@ class LoginActivity : ComponentActivity() {
                                         .padding(start = 15.dp, end = 15.dp),
                                     colors = ButtonDefaults.buttonColors(
                                         containerColor = LightBlue
-
                                     )
                                 ) {
                                     Text(
@@ -290,17 +306,17 @@ class LoginActivity : ComponentActivity() {
                                     )
                                 }
                             }
+                            if (viewModel.isLoading)
+                                Box(modifier = Modifier.layoutId("loginLoader")) {
+                                    CircularLoader()
+                                }
                         }
-
                     }
                 }
-
-
             }
-
-
         }
     }
+
 
     @Composable
     fun setUserLoginConstraints(): ConstraintSet {
@@ -310,6 +326,15 @@ class LoginActivity : ComponentActivity() {
             val loginUserNameConstraint = createRefFor("loginUserName")
             val loginPasswordConstraint = createRefFor("loginPassword")
             val loginButtonConstraint = createRefFor("loginButton")
+            val loginLoaderConstraint = createRefFor("loginLoader")
+
+            constrain(loginLoaderConstraint) {
+
+                top.linkTo(parent.top)
+                bottom.linkTo(parent.bottom)
+                start.linkTo(parent.start)
+                end.linkTo(parent.end)
+            }
             constrain(loginTitleConstraint) {
                 top.linkTo(parent.top)
                 start.linkTo(parent.start)

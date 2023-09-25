@@ -63,19 +63,21 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.8.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
+    implementation(platform("androidx.compose:compose-bom:2023.03.00"))
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     androidTestImplementation(platform("androidx.compose:compose-bom:2023.03.00"))
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
+    androidTestImplementation(platform("androidx.compose:compose-bom:2023.03.00"))
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
     //ViewModel and LiveData
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:1.0.0-alpha07")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.0-alpha02")
     implementation("androidx.compose.runtime:runtime-livedata:1.0.4")
-    implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.0-alpha05")
-    implementation ("androidx.lifecycle:lifecycle-runtime-compose:2.6.0-alpha05")
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.0-alpha02")
+    implementation ("androidx.lifecycle:lifecycle-runtime-compose:2.6.0-alpha02")
 
     // Retrofit for network requests
     implementation ("com.squareup.retrofit2:retrofit:2.9.0")
@@ -83,16 +85,14 @@ dependencies {
     implementation ("com.squareup.okhttp3:logging-interceptor:4.7.2")
 
     // Coroutines for asynchronous programming
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.1")
-
-   // Dependency injection
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
+    //Dagger - Hilt
     implementation("com.google.dagger:hilt-android:2.44")
-
-    kapt("com.google.dagger:hilt-android-compiler:2.44")
-    implementation("androidx.hilt:hilt-work:1.0.0")
-    kapt("androidx.hilt:hilt-compiler:1.0.0")
-    implementation("androidx.work:work-runtime-ktx:2.8.0")
-    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
+    kapt ("com.google.dagger:hilt-android-compiler:2.44")
+    //implementation("androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha03")
+    kapt ("androidx.hilt:hilt-compiler:1.1.0-alpha01")
+    implementation ("androidx.hilt:hilt-navigation-compose:1.1.0-alpha01")
+    implementation ("androidx.hilt:hilt-navigation-fragment:1.0.0")
 
     implementation ("androidx.constraintlayout:constraintlayout-compose:1.0.1")
 

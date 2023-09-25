@@ -1,5 +1,8 @@
 package com.example.todolist.di
 
+import com.example.todolist.data.api.ApiHelper
+import com.example.todolist.data.api.ApiHelperImpl
+import com.example.todolist.data.api.ApiService
 import com.example.todolist.utilz.Constants
 import dagger.Module
 import dagger.Provides
@@ -10,6 +13,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Singleton
 
 
 @Module
@@ -39,4 +43,10 @@ object RetrofitModule {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
+
+    @Provides
+    fun provideApiService(retrofit: Retrofit): ApiService = retrofit.create(ApiService::class.java)
+
+    @Provides
+    fun provideApiHelper(apiHelper: ApiHelperImpl): ApiHelper = apiHelper
 }

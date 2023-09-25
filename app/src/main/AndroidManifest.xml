@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:name=".utilz.ToDoApplication"
         android:allowBackup="true"
@@ -14,11 +17,17 @@
         android:theme="@style/Theme.TodoList"
         tools:targetApi="31">
         <activity
+            android:name=".ui.home.HomeActivity"
+            android:exported="false"
+            android:label="@string/title_activity_home"
+            android:theme="@style/Theme.TodoList" />
+        <activity
             android:name=".ui.welcome.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.TodoList">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -26,4 +35,5 @@
             android:name=".ui.login.LoginActivity"
             android:exported="true" />
     </application>
+
 </manifest>
