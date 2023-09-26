@@ -8,4 +8,6 @@ object Constants {
     const val LOGIN_ENDPOINT = "auth/login"
 
 
+    const val IS_LOGGED_IN = "isLoggedIn"
+
 }

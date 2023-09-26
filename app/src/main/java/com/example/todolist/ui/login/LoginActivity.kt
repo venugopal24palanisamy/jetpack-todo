@@ -1,5 +1,7 @@
 package com.example.todolist.ui.login
 
+import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.widget.Toast
 
@@ -56,9 +58,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.todolist.R
 import com.example.todolist.modal.LoginRequestData
 import com.example.todolist.ui.components.CircularLoader
+import com.example.todolist.ui.home.HomeActivity
 import com.example.todolist.ui.theme.Blue
 import com.example.todolist.ui.theme.LightBlue
 import com.example.todolist.ui.theme.TodoListTheme
+import com.example.todolist.utilz.Constants
+import com.example.todolist.utilz.PreferenceHelper
 
 import com.example.todolist.utilz.Status
 import dagger.hilt.android.AndroidEntryPoint
@@ -83,7 +88,6 @@ class LoginActivity : ComponentActivity() {
         ) {
             when (it.status) {
                 Status.LOADING -> viewModel.isLoading = true
-
                 Status.SUCCESS -> {
                     Toast.makeText(
                         context,
@@ -91,6 +95,9 @@ class LoginActivity : ComponentActivity() {
                         Toast.LENGTH_SHORT
                     ).show()
                     viewModel.isLoading = false
+                    PreferenceHelper(this).setBoolean(Constants.IS_LOGGED_IN, true)
+                    context.startActivity(Intent(this, HomeActivity::class.java))
+                    finish()
                 }
 
                 Status.ERROR -> {
@@ -265,8 +272,6 @@ class LoginActivity : ComponentActivity() {
                                         )
                                     }
                                 )
-
-
                             }
 
 
@@ -329,12 +334,12 @@ class LoginActivity : ComponentActivity() {
             val loginLoaderConstraint = createRefFor("loginLoader")
 
             constrain(loginLoaderConstraint) {
-
                 top.linkTo(parent.top)
                 bottom.linkTo(parent.bottom)
                 start.linkTo(parent.start)
                 end.linkTo(parent.end)
             }
+
             constrain(loginTitleConstraint) {
                 top.linkTo(parent.top)
                 start.linkTo(parent.start)
