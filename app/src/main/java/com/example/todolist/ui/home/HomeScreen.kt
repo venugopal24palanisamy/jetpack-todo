@@ -38,7 +38,6 @@ import com.example.todolist.ui.components.NavigationItems
 import com.example.todolist.ui.components.getNavigationDrawerItems
 
 import com.example.todolist.ui.navigation.DrawerNavigationActions
-import com.example.todolist.ui.navigation.DrawerRouting
 
 import com.example.todolist.ui.theme.Blue
 import kotlinx.coroutines.launch
@@ -89,7 +88,7 @@ fun HomeScreen(
                 }
             }
         }) {
-            DrawerRouting(navHostController,navController)
+            //DrawerRouting(navHostController,navController)
 
 
         }

@@ -32,28 +32,20 @@ fun AppNavigation(navController: NavHostController) {
         composable(Screen.AddTodo.route) {
             AddListing(navController)
         }
-    }
-}
 
-@Composable
-fun DrawerRouting(navHostController: NavHostController,
-                  navController: NavController) {
-    NavHost(
-        navController = navHostController,
-        startDestination = Screen.HomeListing.route,
-    ) {
         composable(Screen.HomeListing.route) {
-            HomeListings(navHostController,navController)
+            HomeListings(navController)
         }
         composable(Screen.YourListing.route) {
-            YourListings(navHostController,navController)
+            YourListings(navController)
         }
         composable(Screen.Profile.route) {
-            Profile(navHostController,navController)
+            Profile(navController)
         }
-
     }
 }
+
+
 
 class DrawerNavigationActions(private val navController: NavHostController) {
     fun navigateToHome() {

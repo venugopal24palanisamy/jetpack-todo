@@ -14,4 +14,5 @@
     <string name="title_activity_home">HomeActivity</string>
     <string name="title_activity_splash">SplashActivity</string>
     <string name="add_list">Add List\n</string>
+    <string name="notes">Add Notes\n</string>
 </resources>

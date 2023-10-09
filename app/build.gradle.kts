@@ -98,6 +98,7 @@ dependencies {
     implementation ("androidx.hilt:hilt-navigation-fragment:1.0.0")
 
     implementation ("androidx.constraintlayout:constraintlayout-compose:1.0.1")
+    implementation ("com.google.accompanist:accompanist-navigation-animation:0.16.1")
 
 
 

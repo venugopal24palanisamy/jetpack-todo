@@ -117,8 +117,7 @@ fun WelcomeView(
             ) {
                 Button(
                     onClick = {
-                        navigationController.navigate(Screen.Home.route)
-                        //appState.navigateTo("loginScreen")
+                        navigationController.navigate(Screen.HomeListing.route)
                     },
                     shape = RoundedCornerShape(35),
                     modifier = Modifier

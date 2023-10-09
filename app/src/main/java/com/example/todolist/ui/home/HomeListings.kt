@@ -25,8 +25,7 @@ import com.example.todolist.ui.navigation.Screen
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
 @Composable
 fun HomeListings(
-    navHostController: NavHostController,
-    navController: NavController
+    navController: NavHostController
 ) {
     Scaffold(floatingActionButton = {
         AnimatedVisibility(
