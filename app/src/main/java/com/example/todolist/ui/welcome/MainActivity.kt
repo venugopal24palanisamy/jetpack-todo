@@ -24,6 +24,7 @@ import com.example.todolist.ui.components.NavigationItems
 import com.example.todolist.ui.components.getNavigationDrawerItems
 import com.example.todolist.ui.navigation.AppNavigation
 import com.example.todolist.ui.navigation.DrawerNavigationActions
+import com.example.todolist.ui.splash.SplashScreen
 import com.example.todolist.ui.theme.Blue
 
 
@@ -73,13 +74,14 @@ class MainActivity : ComponentActivity() {
                         }
                     }) {
                     Scaffold(topBar = {
-                        AppBar {
+                        /*AppBar {
                             coroutineScope.launch {
                                 drawerState.open()
                             }
-                        }
+                        }*/
                     }) {
                          AppNavigation(navController)
+                        //SplashScreen(navController = navController)
                     }
                 }
             }

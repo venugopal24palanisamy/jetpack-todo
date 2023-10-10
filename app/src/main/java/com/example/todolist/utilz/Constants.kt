@@ -2,6 +2,7 @@ package com.example.todolist.utilz
 
 object Constants {
 
+    const val SPLASH_SCREEN_DURATION = 0L
     const val BASE_URL = "https://dummyjson.com/"
 
     //API End Points

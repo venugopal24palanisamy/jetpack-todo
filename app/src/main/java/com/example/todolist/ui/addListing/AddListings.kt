@@ -1,6 +1,7 @@
 package com.example.todolist.ui.addListing
 
 import android.annotation.SuppressLint
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -19,11 +20,13 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardCapitalization
@@ -33,8 +36,12 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.todolist.R
+import com.example.todolist.modal.AddTodoRequest
 import com.example.todolist.ui.components.AddNoteTopBar
+import com.example.todolist.ui.navigation.Screen
 import com.example.todolist.ui.theme.Blue
+import com.example.todolist.utilz.MyFunctions
+import com.example.todolist.utilz.Status
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -43,17 +50,35 @@ fun AddListing(
     navHostController: NavHostController
 ) {
     val viewModel: AddTodoViewModel = hiltViewModel()
-    var title by remember { mutableStateOf("") }
     var notes by remember { mutableStateOf("") }
-    val focusManager = LocalFocusManager.current
+    val context = LocalContext.current
+
+    val addedToDoData by viewModel.addTodoData.observeAsState()
+    when (addedToDoData?.status) {
+        Status.LOADING -> {}
+        Status.SUCCESS -> {
+            //navHostController.popBackStack()
+            Toast.makeText(context, "Added Successfully", Toast.LENGTH_SHORT).show()
+        }
+
+        Status.ERROR -> {
+
+        }
+
+        else -> {}
+    }
 
     Scaffold(
         Modifier.background(color = Blue),
         topBar = {
             AddNoteTopBar(
                 navigateBack = { navHostController.popBackStack() },
-                title = "",
-                notes = ""
+                addNotes = {
+                    viewModel.addToDoFromUser(
+                        context,
+                        AddTodoRequest(notes, false, "5")
+                    )
+                }
             )
         },
     ) {

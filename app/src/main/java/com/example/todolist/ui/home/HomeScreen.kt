@@ -89,12 +89,8 @@ fun HomeScreen(
             }
         }) {
             //DrawerRouting(navHostController,navController)
-
-
         }
     }
-
-
 }
 
 

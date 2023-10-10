@@ -65,4 +65,24 @@ class LoginViewModel @Inject constructor(
             )
         }
     }
+
+    fun validate(context: Context): Boolean {
+        if (loginUserName.isEmpty()) {
+            isUserNameError = true
+            loginUserNameError = context.getString(R.string.enter_user_name)
+            return false
+        } else {
+            isUserNameError = false
+            loginUserNameError = ""
+        }
+        if (loginUserPassword.isEmpty()) {
+            isPasswordError = true
+            loginUserPasswordError = context.getString(R.string.enter_password)
+            return false
+        } else {
+            isPasswordError = false
+            loginUserPasswordError = ""
+        }
+        return true
+    }
 }

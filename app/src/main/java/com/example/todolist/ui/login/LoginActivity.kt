@@ -84,6 +84,7 @@ fun Login(
                 context,
                 loginData?.data
             )
+            navController.popBackStack()
             navController.navigate(Screen.Home.route)
         }
 
@@ -98,25 +99,7 @@ fun Login(
 
         else -> {}
     }
-    fun validate(): Boolean {
-        if (viewModel.loginUserName.isEmpty()) {
-            viewModel.isUserNameError = true
-            viewModel.loginUserNameError = context.getString(R.string.enter_user_name)
-            return false
-        } else {
-            viewModel.isUserNameError = false
-            viewModel.loginUserNameError = ""
-        }
-        if (viewModel.loginUserPassword.isEmpty()) {
-            viewModel.isPasswordError = true
-            viewModel.loginUserPasswordError = context.getString(R.string.enter_password)
-            return false
-        } else {
-            viewModel.isPasswordError = false
-            viewModel.loginUserPasswordError = ""
-        }
-        return true
-    }
+
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -271,15 +254,14 @@ fun Login(
                         ) {
                             Button(
                                 onClick = {
-                                    if (validate()) {
-                                        viewModel.loginCall(
-                                            context,
-                                            LoginRequestData(
-                                                viewModel.loginUserName,
-                                                viewModel.loginUserPassword
-                                            )
+                                    if (viewModel.validate(context)) viewModel.loginCall(
+                                        context,
+                                        LoginRequestData(
+                                            viewModel.loginUserName,
+                                            viewModel.loginUserPassword
                                         )
-                                    }
+                                    )
+
                                 },
                                 shape = RoundedCornerShape(35),
                                 modifier = Modifier
@@ -309,9 +291,6 @@ fun Login(
     }
 }
 
-fun setObserver() {
-
-}
 
 @Composable
 fun setUserLoginConstraints(): ConstraintSet {
