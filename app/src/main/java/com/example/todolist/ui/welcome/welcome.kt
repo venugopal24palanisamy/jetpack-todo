@@ -118,7 +118,7 @@ fun WelcomeView(
                 Button(
                     onClick = {
                         navigationController.popBackStack()
-                        navigationController.navigate(Screen.HomeListing.route)
+                        navigationController.navigate(Screen.Home.route)
                     },
                     shape = RoundedCornerShape(35),
                     modifier = Modifier

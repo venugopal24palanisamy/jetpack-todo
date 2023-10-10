@@ -35,55 +35,12 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             TodoListTheme {
                 val navController = rememberNavController()
-                val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
-                val coroutineScope = rememberCoroutineScope()
-                val drawerItemList = getNavigationDrawerItems()
-                var selectedItem = remember { mutableStateOf(drawerItemList[0].label) }.toString()
-                val navigationActions = remember(navController) {
-                    DrawerNavigationActions(navController)
-                }
-                ModalNavigationDrawer(drawerState = drawerState,
-                    drawerContent = {
-                        ModalDrawerSheet(
-                            drawerContainerColor = Blue,
-                            drawerTonalElevation = 27.dp,
-                        ) {
-                            Spacer(Modifier.height(55.dp))
-                            DrawerHeader()
-                            Spacer(Modifier.height(25.dp))
-                            drawerItemList.forEach { it ->
-                                NavigationItems(it) {
-                                    it.isSelected = true
-                                    selectedItem = it.label
-                                    when (selectedItem) {
-                                        "Home" -> navigationActions.navigateToHome()
-                                        "Your List" -> navigationActions.navigateToYourListing()
-                                        "Profile" -> navigationActions.navigateToProfile()
-                                    }
-                                    coroutineScope.launch {
-                                        drawerState.close()
-                                    }
-                                }
-                            }
-                        }
-                    }) {
-                    Scaffold(topBar = {
-                        /*AppBar {
-                            coroutineScope.launch {
-                                drawerState.open()
-                            }
-                        }*/
-                    }) {
-                         AppNavigation(navController)
-                        //SplashScreen(navController = navController)
-                    }
-                }
+                AppNavigation(navController)
             }
         }
     }

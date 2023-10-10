@@ -46,14 +46,13 @@ import kotlinx.coroutines.launch
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun HomeScreen(
-    navController: NavController,
-    navHostController: NavHostController = rememberNavController()
+    navHostController: NavHostController
 ) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val coroutineScope = rememberCoroutineScope()
     val drawerItemList = getNavigationDrawerItems()
     var selectedItem = remember { mutableStateOf(drawerItemList[0].label) }.toString()
-    val navigationActions = remember(navController) {
+    val navigationActions = remember(navHostController) {
         DrawerNavigationActions(navHostController)
     }
     ModalNavigationDrawer(drawerState = drawerState,
@@ -70,7 +69,7 @@ fun HomeScreen(
                         it.isSelected = true
                         selectedItem = it.label
                         when (selectedItem) {
-                            "Home" -> navigationActions.navigateToHome()
+                            "Home" -> {}
                             "Your List" -> navigationActions.navigateToYourListing()
                             "Profile" -> navigationActions.navigateToProfile()
                         }
@@ -88,15 +87,10 @@ fun HomeScreen(
                 }
             }
         }) {
-            //DrawerRouting(navHostController,navController)
+            HomeListings(navController = navHostController)
         }
     }
 }
 
 
-@Preview(showBackground = true)
-@Composable
-fun HomeScreenPreview() {
-    HomeScreen(navController = rememberNavController())
-}
 

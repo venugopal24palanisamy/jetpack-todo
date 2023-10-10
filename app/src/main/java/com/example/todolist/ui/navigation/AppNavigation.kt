@@ -21,7 +21,6 @@ fun AppNavigation(navController: NavHostController) {
         navController = navController,
         startDestination = Screen.Welcome.route
     ) {
-
         composable(Screen.Splash.route) {
             SplashScreen(navController)
         }
@@ -31,9 +30,9 @@ fun AppNavigation(navController: NavHostController) {
         composable(Screen.Login.route) {
             Login(navController)
         }
-        /*composable(Screen.Home.route) {
+        composable(Screen.Home.route) {
             HomeScreen(navController)
-        }*/
+        }
         composable(Screen.AddTodo.route) {
             AddListing(navController)
         }
