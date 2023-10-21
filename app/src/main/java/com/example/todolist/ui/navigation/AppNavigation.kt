@@ -1,7 +1,7 @@
 package com.example.todolist.ui.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavController
+import androidx.compose.ui.platform.LocalContext
 
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -11,15 +11,24 @@ import com.example.todolist.ui.home.HomeListings
 import com.example.todolist.ui.home.HomeScreen
 import com.example.todolist.ui.login.Login
 import com.example.todolist.ui.profile.Profile
+import com.example.todolist.ui.register.RegisterScreen
 import com.example.todolist.ui.splash.SplashScreen
 import com.example.todolist.ui.welcome.WelcomeView
 import com.example.todolist.ui.your_listings.YourListings
+import com.example.todolist.utilz.Constants
+import com.example.todolist.utilz.PreferenceHelper
 
 @Composable
 fun AppNavigation(navController: NavHostController) {
+    val context = LocalContext.current
+    val startDestination = if (PreferenceHelper(context).getBoolean(
+            Constants.IS_LOGGED_IN,
+            false
+        )
+    ) Screen.Home.route else Screen.Welcome.route
     NavHost(
         navController = navController,
-        startDestination = Screen.Welcome.route
+        startDestination = startDestination
     ) {
         composable(Screen.Splash.route) {
             SplashScreen(navController)
@@ -30,13 +39,15 @@ fun AppNavigation(navController: NavHostController) {
         composable(Screen.Login.route) {
             Login(navController)
         }
+        composable(Screen.Register.route) {
+            RegisterScreen(navController)
+        }
         composable(Screen.Home.route) {
             HomeScreen(navController)
         }
         composable(Screen.AddTodo.route) {
             AddListing(navController)
         }
-
         composable(Screen.HomeListing.route) {
             HomeListings(navController)
         }

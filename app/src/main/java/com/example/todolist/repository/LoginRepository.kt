@@ -1,7 +1,7 @@
 package com.example.todolist.repository
 
 import com.example.todolist.data.api.ApiHelper
-import com.example.todolist.modal.LoginRequestData
+import com.example.todolist.modal.request.LoginRequestData
 import javax.inject.Inject
 
 class LoginRepository @Inject constructor(private val apiHelper: ApiHelper) {

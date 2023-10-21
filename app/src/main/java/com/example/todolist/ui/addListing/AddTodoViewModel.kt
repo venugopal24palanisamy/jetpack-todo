@@ -6,8 +6,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.todolist.R
-import com.example.todolist.modal.AddTodoRequest
-import com.example.todolist.modal.AddTodoResponse
+import com.example.todolist.modal.request.AddTodoRequest
+import com.example.todolist.modal.response.AddTodoResponse
 import com.example.todolist.repository.AddTodoRepository
 import com.example.todolist.utilz.NetworkHelper
 import com.example.todolist.utilz.Resource
@@ -18,10 +18,10 @@ import javax.inject.Inject
 @HiltViewModel
 class AddTodoViewModel @Inject constructor(private val addTodoRepository: AddTodoRepository) :
     ViewModel() {
+
     private val addTodo = MutableLiveData<Resource<AddTodoResponse>>()
     val addTodoData: LiveData<Resource<AddTodoResponse>>
         get() = addTodo
-
     fun addToDoFromUser(
         context: Context,
         addTodoRequestData: AddTodoRequest
@@ -30,8 +30,7 @@ class AddTodoViewModel @Inject constructor(private val addTodoRepository: AddTod
             addTodo.postValue(Resource.loading(null))
             if (NetworkHelper(context).isNetworkConnected()) addTodoRepository.addTodo(
                 addTodoRequestData
-            )
-                .let {
+            ).let {
                     if (it.isSuccessful)
                         addTodo.postValue(Resource.success(it.body()))
                     else addTodo.postValue(
@@ -47,7 +46,6 @@ class AddTodoViewModel @Inject constructor(private val addTodoRepository: AddTod
                     null
                 )
             )
-
         }
     }
 }

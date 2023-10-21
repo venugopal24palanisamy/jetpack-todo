@@ -9,8 +9,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.todolist.R
-import com.example.todolist.modal.LoginRequestData
-import com.example.todolist.modal.LoginResponseData
+import com.example.todolist.modal.request.LoginRequestData
+import com.example.todolist.modal.response.LoginResponseData
 import com.example.todolist.repository.LoginRepository
 import com.example.todolist.utilz.NetworkHelper
 import com.example.todolist.utilz.Resource
@@ -46,8 +46,7 @@ class LoginViewModel @Inject constructor(
             loginUser.postValue(Resource.loading(null))
             if (NetworkHelper(context).isNetworkConnected()) loginRepository.loginUser(
                 loginRequestData
-            )
-                .let {
+            ).let {
                     if (it.isSuccessful)
                         loginUser.postValue(Resource.success(it.body()))
                     else loginUser.postValue(

@@ -2,9 +2,11 @@ package com.example.todolist.utilz
 
 import android.content.Context
 import android.util.Log
-import com.example.todolist.modal.LoginResponseData
+import androidx.compose.ui.graphics.Color
+import com.example.todolist.modal.response.LoginResponseData
 import okhttp3.ResponseBody
 import org.json.JSONObject
+import kotlin.random.Random
 
 class MyFunctions {
     companion object {
@@ -20,8 +22,16 @@ class MyFunctions {
         ) {
             PreferenceHelper(context).setBoolean(Constants.IS_LOGGED_IN, true)
             PreferenceHelper(context).setString(Constants.USER_ID, data?.id.toString())
-            PreferenceHelper(context).setString(Constants.USER_NAME, data?.username)
-            PreferenceHelper(context).setString(Constants.USER_IMAGE, data?.image)
+            PreferenceHelper(context).setString(Constants.USER_NAME, data?.name)
+            //PreferenceHelper(context).setString(Constants.USER_IMAGE, data?.image)
+        }
+
+        fun generateRandomColor(): Color {
+            val random = Random
+            val red = random.nextFloat()
+            val green = random.nextFloat()
+            val blue = random.nextFloat()
+            return Color(red, green, blue)
         }
     }
 }

@@ -4,6 +4,7 @@ package com.example.todolist.ui.login
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -52,9 +53,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 
 import com.example.todolist.R
-import com.example.todolist.modal.LoginRequestData
+import com.example.todolist.modal.request.LoginRequestData
 import com.example.todolist.ui.components.CircularLoader
 import com.example.todolist.ui.navigation.Screen
+import com.example.todolist.ui.theme.Black
 
 import com.example.todolist.ui.theme.Blue
 import com.example.todolist.ui.theme.LightBlue
@@ -74,11 +76,7 @@ fun Login(
     when (loginData?.status) {
         Status.LOADING -> viewModel.isLoading = true
         Status.SUCCESS -> {
-            Toast.makeText(
-                context,
-                loginData?.data?.firstName ?: context.getString(R.string.n_a),
-                Toast.LENGTH_SHORT
-            ).show()
+
             viewModel.isLoading = false
             MyFunctions.loggedInPreferences(
                 context,
@@ -261,7 +259,6 @@ fun Login(
                                             viewModel.loginUserPassword
                                         )
                                     )
-
                                 },
                                 shape = RoundedCornerShape(35),
                                 modifier = Modifier
@@ -280,6 +277,33 @@ fun Login(
                                 )
                             }
                         }
+
+
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center,
+                            modifier = Modifier
+                                .layoutId("loginRegister")
+                                .padding(top = 15.dp)
+                        ) {
+
+                            Text(
+                                text = stringResource(R.string.createAccount),
+                                color = Black,
+                                style = MaterialTheme.typography.bodyMedium,
+                                modifier = Modifier.padding(5.dp)
+                            )
+
+                            Text(
+                                text = stringResource(R.string.signup),
+                                color = Blue,
+                                style = MaterialTheme.typography.labelLarge,
+                                modifier = Modifier.padding(5.dp).clickable {  }
+                            )
+
+                        }
+
+
                         if (viewModel.isLoading)
                             Box(modifier = Modifier.layoutId("loginLoader")) {
                                 CircularLoader()
@@ -300,6 +324,7 @@ fun setUserLoginConstraints(): ConstraintSet {
         val loginUserNameConstraint = createRefFor("loginUserName")
         val loginPasswordConstraint = createRefFor("loginPassword")
         val loginButtonConstraint = createRefFor("loginButton")
+        val loginRegisterConstraint = createRefFor("loginRegister")
         val loginLoaderConstraint = createRefFor("loginLoader")
 
         constrain(loginLoaderConstraint) {
@@ -331,6 +356,12 @@ fun setUserLoginConstraints(): ConstraintSet {
 
         constrain(loginButtonConstraint) {
             top.linkTo(loginPasswordConstraint.bottom)
+            start.linkTo(parent.start)
+            end.linkTo(parent.end)
+        }
+
+        constrain(loginRegisterConstraint) {
+            top.linkTo(loginButtonConstraint.bottom)
             start.linkTo(parent.start)
             end.linkTo(parent.end)
         }

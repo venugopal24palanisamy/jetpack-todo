@@ -1,6 +1,7 @@
 package com.example.todolist.ui.home
 
 import android.annotation.SuppressLint
+import androidx.compose.animation.core.Animatable
 
 
 import androidx.compose.foundation.layout.Spacer
@@ -24,6 +25,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
 
 
 import androidx.compose.ui.tooling.preview.Preview
@@ -40,6 +42,7 @@ import com.example.todolist.ui.components.getNavigationDrawerItems
 import com.example.todolist.ui.navigation.DrawerNavigationActions
 
 import com.example.todolist.ui.theme.Blue
+import com.example.todolist.utilz.Constants.DrawerWidth
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -52,9 +55,20 @@ fun HomeScreen(
     val coroutineScope = rememberCoroutineScope()
     val drawerItemList = getNavigationDrawerItems()
     var selectedItem = remember { mutableStateOf(drawerItemList[0].label) }.toString()
+
+    val translationX = remember {
+        Animatable(0f)
+    }
+    val drawerWidth = with(LocalDensity.current) {
+        DrawerWidth.toPx()
+    }
+
+    translationX.updateBounds(0f, drawerWidth)
+
     val navigationActions = remember(navHostController) {
         DrawerNavigationActions(navHostController)
     }
+
     ModalNavigationDrawer(drawerState = drawerState,
         drawerContent = {
             ModalDrawerSheet(
