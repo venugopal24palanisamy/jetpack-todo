@@ -71,7 +71,7 @@ fun AddListing(
                 addNotes = {
                     viewModel.addToDoFromUser(
                         context,
-                        AddTodoRequest(notes, false, "5")
+                        AddTodoRequest(notes, false)
                     )
                 }
             )

@@ -1,13 +1,9 @@
 package com.example.todolist.modal.response
- data class AddedListingResponseData(
-    val limit: Int,
-    val skip: Int,
-    val todos: List<Todo>,
-    val total: Int
-)
+
 data class Todo(
-    val completed: Boolean,
+    val completed: Int,
     val id: Int,
-    val todo: String,
-    val userId: Int
+    val author: String,
+    val description: String,
+    val user_id: Int
 )

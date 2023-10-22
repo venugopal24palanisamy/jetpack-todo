@@ -19,6 +19,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
@@ -47,24 +48,13 @@ fun HomeListings(
 ) {
     val context = LocalContext.current
     val homeViewModel: HomeListingViewModel = hiltViewModel()
-    homeViewModel.getAddedToDoData(context, "5")
-    val scope = rememberCoroutineScope()
 
-    val addedData by homeViewModel.getAddedTodoLiveData.observeAsState()
+    LaunchedEffect(Unit) {
+        homeViewModel.getAddedToDoData(context)
+    }
+
     val toDoList by homeViewModel.getAddedTodoLiveLiveData.observeAsState()
 
-    when (addedData?.status) {
-        Status.LOADING -> {}
-        Status.SUCCESS -> {
-
-        }
-
-        Status.ERROR -> {
-
-        }
-
-        else -> {}
-    }
     Scaffold(floatingActionButton = {
         AnimatedVisibility(
             visible = true,
@@ -88,7 +78,7 @@ fun HomeListings(
                     modifier = Modifier.padding(6.dp)
                 ) {
                     items(toDoList!!.size) {
-                        TodoTile(toDoList!![it].todo,
+                        TodoTile(toDoList!![it]!!.description,
                             onItemClicked = {
 
                             }, onDeleteClicked = {

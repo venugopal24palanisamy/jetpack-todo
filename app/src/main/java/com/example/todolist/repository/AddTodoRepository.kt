@@ -5,6 +5,6 @@ import com.example.todolist.modal.request.AddTodoRequest
 import javax.inject.Inject
 
 class AddTodoRepository @Inject constructor(private val apiHelper: ApiHelper) {
-    suspend fun addTodo(requestData: AddTodoRequest) = apiHelper.postAddTodo(requestData)
-
+    suspend fun addTodo(token: String?, userId: String?, requestData: AddTodoRequest) =
+        apiHelper.postAddTodo(token!!, userId!!, requestData)
 }

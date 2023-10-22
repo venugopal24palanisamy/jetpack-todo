@@ -9,7 +9,9 @@ import com.example.todolist.R
 import com.example.todolist.modal.request.AddTodoRequest
 import com.example.todolist.modal.response.AddTodoResponse
 import com.example.todolist.repository.AddTodoRepository
+import com.example.todolist.utilz.Constants
 import com.example.todolist.utilz.NetworkHelper
+import com.example.todolist.utilz.PreferenceHelper
 import com.example.todolist.utilz.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -22,6 +24,7 @@ class AddTodoViewModel @Inject constructor(private val addTodoRepository: AddTod
     private val addTodo = MutableLiveData<Resource<AddTodoResponse>>()
     val addTodoData: LiveData<Resource<AddTodoResponse>>
         get() = addTodo
+
     fun addToDoFromUser(
         context: Context,
         addTodoRequestData: AddTodoRequest
@@ -29,17 +32,22 @@ class AddTodoViewModel @Inject constructor(private val addTodoRepository: AddTod
         viewModelScope.launch {
             addTodo.postValue(Resource.loading(null))
             if (NetworkHelper(context).isNetworkConnected()) addTodoRepository.addTodo(
+                PreferenceHelper(context).getString(
+                    Constants.USER_TOKEN, ""
+                ),PreferenceHelper(context).getString(
+                    Constants.USER_ID, ""
+                ),
                 addTodoRequestData
             ).let {
-                    if (it.isSuccessful)
-                        addTodo.postValue(Resource.success(it.body()))
-                    else addTodo.postValue(
-                        Resource.error(
-                            it.errorBody().toString(),
-                            null
-                        )
+                if (it.isSuccessful)
+                    addTodo.postValue(Resource.success(it.body()))
+                else addTodo.postValue(
+                    Resource.error(
+                        it.errorBody().toString(),
+                        null
                     )
-                }
+                )
+            }
             else addTodo.postValue(
                 Resource.error(
                     context.getString(R.string.no_internet_connection),

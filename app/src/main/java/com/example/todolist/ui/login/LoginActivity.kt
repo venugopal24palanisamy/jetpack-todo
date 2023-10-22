@@ -1,6 +1,7 @@
 package com.example.todolist.ui.login
 
 
+import android.annotation.SuppressLint
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -32,6 +33,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -62,8 +64,10 @@ import com.example.todolist.ui.theme.Blue
 import com.example.todolist.ui.theme.LightBlue
 import com.example.todolist.utilz.MyFunctions
 import com.example.todolist.utilz.Status
+import kotlinx.coroutines.launch
 
 
+@SuppressLint("CoroutineCreationDuringComposition")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Login(
@@ -71,19 +75,20 @@ fun Login(
     viewModel: LoginViewModel = hiltViewModel(),
 ) {
     val context = LocalContext.current
-
+    val scope = rememberCoroutineScope()
     val loginData by viewModel.loginData.observeAsState()
     when (loginData?.status) {
         Status.LOADING -> viewModel.isLoading = true
         Status.SUCCESS -> {
-
-            viewModel.isLoading = false
-            MyFunctions.loggedInPreferences(
-                context,
-                loginData?.data
-            )
-            navController.popBackStack()
-            navController.navigate(Screen.Home.route)
+            scope.launch {
+                viewModel.isLoading = false
+                MyFunctions.loggedInPreferences(
+                    context,
+                    loginData?.data
+                )
+                navController.popBackStack()
+                navController.navigate(Screen.Home.route)
+            }
         }
 
         Status.ERROR -> {
@@ -298,7 +303,9 @@ fun Login(
                                 text = stringResource(R.string.signup),
                                 color = Blue,
                                 style = MaterialTheme.typography.labelLarge,
-                                modifier = Modifier.padding(5.dp).clickable {  }
+                                modifier = Modifier
+                                    .padding(5.dp)
+                                    .clickable { }
                             )
 
                         }
